@@ -5,6 +5,8 @@ lazy val root = (project in file("."))
   .settings(
     organization := "net.gutefrage",
     name := "scalacheck-money",
+    // License headers
+    headers := createFrom(Apache2_0, "2016", "gutefrage.net GmbH"),
     inThisBuild(
       List(
         scalaVersion := "2.11.8",
@@ -44,9 +46,8 @@ lazy val root = (project in file("."))
           "com.github.mpilquist" %% "simulacrum" % "0.10.0",
           "com.chuusai" %% "shapeless" % "2.3.2",
           "org.scalatest" %% "scalatest" % "3.0.1" % "test"
-        ),
-        // License headers
-        headers := createFrom(Apache2_0, "2016", "gutefrage.net GmbH")
-      ))
+        )
+      )
+    )
   )
   .enablePlugins(AutomateHeaderPlugin)
