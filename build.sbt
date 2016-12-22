@@ -38,13 +38,10 @@ lazy val root = (project in file("."))
           // Fail compilation on warnings
           "-Xfatal-warnings"
         ),
-        // Macro tooling (for simulacrum and others)
-        addCompilerPlugin(
-          "org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
         libraryDependencies ++= Seq(
-          "org.typelevel" %% "cats" % "0.8.1",
-          "com.github.mpilquist" %% "simulacrum" % "0.10.0",
-          "com.chuusai" %% "shapeless" % "2.3.2",
+          // Issues blocking an update to scalacheck 1.13:
+          // https://github.com/scalatest/scalatest/issues/837
+          "org.scalacheck" %% "scalacheck" % "1.12.5",
           "org.scalatest" %% "scalatest" % "3.0.1" % "test"
         )
       )
