@@ -3,7 +3,7 @@ import de.heikoseeberger.sbtheader.CommentStyleMapping._
 
 lazy val root = (project in file("."))
   .settings(
-    organization := "com.lunaryorn",
+    organization := "net.gutefrage",
     name := "scalacheck-money",
     inThisBuild(
       List(
@@ -46,7 +46,7 @@ lazy val root = (project in file("."))
           "org.scalatest" %% "scalatest" % "3.0.1" % "test"
         ),
         // License headers
-        headers := createFrom(Apache2_0, "2016", "Sebastian Wiesner")
+        headers := createFrom(Apache2_0, "2016", "gutefrage.net GmbH")
       ))
   )
   .enablePlugins(AutomateHeaderPlugin)
