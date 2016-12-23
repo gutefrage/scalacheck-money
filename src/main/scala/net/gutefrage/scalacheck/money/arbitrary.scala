@@ -16,6 +16,4 @@
 
 package net.gutefrage.scalacheck.money
 
-object arbitrary {
-
-}
+object arbitrary {}
