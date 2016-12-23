@@ -12,11 +12,35 @@ val validateCommands = List(
 
 lazy val root = (project in file("."))
   .settings(
+    // Build metadata
     organization := "net.gutefrage",
     name := "scalacheck-money",
-    addCommandAlias("validate", validateCommands.mkString(";", ";", "")),
+    startYear := Some(2016),
+    description := "scalacheck generators and arbitraries for JSR 354 monetary types",
+    homepage := Some(url(s"https://github.com/gutefrage/scalacheck-money")),
+    licenses += "Apache-2.0" -> url(
+      "http://www.apache.org/licenses/LICENSE-2.0"),
+    scmInfo := Some(
+      ScmInfo(homepage.value.get,
+              s"scm:git:https://github.com/gutefrage/scalacheck-money.git",
+              Some(s"scm:git:git@github.com:gutefrage/scalacheck-money.git"))),
+    pomExtra :=
+      <developers>
+        <developer>
+          <id>lunaryorn</id>
+          <name>Sebastian Wiesner</name>
+          <url>http://www.lunaryorn.com</url>
+        </developer>
+        <developer>
+          <id>muuki88</id>
+          <name>Nepomuk Seiler</name>
+          <url>https://github.com/muuki88/</url>
+        </developer>
+      </developers>,
     // License headers
     headers := createFrom(Apache2_0, "2016", "gutefrage.net GmbH"),
+    // Do-it-all build alias for Travis CI
+    addCommandAlias("validate", validateCommands.mkString(";", ";", "")),
     inThisBuild(
       List(
         scalaVersion := "2.11.8",
