@@ -1,10 +1,20 @@
 import de.heikoseeberger.sbtheader.license.Apache2_0
 import de.heikoseeberger.sbtheader.CommentStyleMapping._
 
+val validateCommands = List(
+  "clean",
+  "scalafmtTest",
+  "test:scalafmtTest",
+  "compile",
+  "test:compile",
+  "test"
+)
+
 lazy val root = (project in file("."))
   .settings(
     organization := "net.gutefrage",
     name := "scalacheck-money",
+    addCommandAlias("validate", validateCommands.mkString(";", ";", "")),
     // License headers
     headers := createFrom(Apache2_0, "2016", "gutefrage.net GmbH"),
     inThisBuild(
@@ -45,7 +55,7 @@ lazy val root = (project in file("."))
           "javax.money" % "money-api" % "1.0.1",
           "org.scalatest" %% "scalatest" % "3.0.1" % Test,
           "org.javamoney" % "moneta" % "1.1" % Test
-        )§
+        )
       )
     )
   )
