@@ -1,6 +1,8 @@
 import de.heikoseeberger.sbtheader.license.Apache2_0
 import de.heikoseeberger.sbtheader.CommentStyleMapping._
+import ReleaseTransformations._
 
+// Commands to run on Travis CI
 val validateCommands = List(
   "clean",
   "scalafmtTest",
@@ -9,6 +11,22 @@ val validateCommands = List(
   "test:compile",
   "test"
 )
+
+// Publish and release configuration
+// Additional release step to update the version number in the README
+lazy val updateVersionInReadme: ReleaseStep = { st: State =>
+  val newVersion = Project.extract(st).get(version)
+
+  val pattern = "\"net.gutefrage\" %% \"scalacheck-money\" % \"([^\"]+)\"".r
+  val readme = file("README.md")
+  val content = IO.read(readme)
+  pattern.findFirstMatchIn(content).foreach { m =>
+    IO.write(readme, m.before(1) + newVersion + m.after(1))
+  }
+
+  Seq("git", "add", readme.getAbsolutePath) !! st.log
+  st
+}
 
 lazy val root = (project in file("."))
   .settings(
@@ -41,6 +59,25 @@ lazy val root = (project in file("."))
     headers := createFrom(Apache2_0, "2016", "gutefrage.net GmbH"),
     // Do-it-all build alias for Travis CI
     addCommandAlias("validate", validateCommands.mkString(";", ";", "")),
+    // Release settings
+    releasePublishArtifactsAction := PgpKeys.publishSigned.value,
+    releaseTagComment := s"scalacheck-money ${(version in ThisBuild).value}",
+    releaseCommitMessage := s"Release ${(version in ThisBuild).value}",
+    releaseCrossBuild := true,
+    releaseProcess := Seq[ReleaseStep](
+      checkSnapshotDependencies,
+      inquireVersions,
+      runTest,
+      setReleaseVersion,
+      updateVersionInReadme,
+      commitReleaseVersion,
+      tagRelease,
+      publishArtifacts,
+      setNextVersion,
+      commitNextVersion,
+      pushChanges
+    ),
+    // Build settings for the current projects
     inThisBuild(
       List(
         scalaVersion := "2.12.1",
@@ -80,7 +117,9 @@ lazy val root = (project in file("."))
           "javax.money" % "money-api" % "1.0.1",
           "org.scalatest" %% "scalatest" % "3.0.1" % Test,
           "org.javamoney" % "moneta" % "1.1" % Test
-        )
+        ),
+        // Release settings: Publish maven style, sign our releases, and define the release steps
+        publishMavenStyle := true
       )
     )
   )
