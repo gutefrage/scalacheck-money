@@ -77,11 +77,12 @@ lazy val root = (project in file("."))
       commitNextVersion,
       pushChanges
     ),
+    // Scala versions
+    scalaVersion := "2.12.1",
+    crossScalaVersions := Seq("2.11.8", "2.12.1"),
     // Build settings for the current projects
     inThisBuild(
       List(
-        scalaVersion := "2.12.1",
-        crossScalaVersions := Seq("2.11.8", "2.12.1"),
         // Build settings
         scalacOptions ++= Seq(
           // Code encoding
