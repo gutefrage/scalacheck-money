@@ -29,6 +29,28 @@ The main package `net.gutefrage.scalacheck.money` provides the following API:
   types like `MonetaryAmount` or `CurrencyUnit`.
 * `arbitrary` provides general arbitrary instances for those types.
 
+Arbitrary monetary amounts require an arbitrary currency.  This library provides
+implicits for any currency as well for some popular currencies:
+
+```scala
+import javax.money.MonetaryAmount
+import net.gutefrage.scalacheck.money.arbitrary._
+
+property("amounts in any currency") {
+  import currency.any
+  forAll { amount: MonetaryAmount =>
+    …
+  }
+}
+
+property("amounts in €") {
+  import currency.byCode.EUR
+  forAll { amount: MonetaryAmount =>
+    …
+  }
+}
+```
+
 ## Contribution
 
 Contributions via GitHub pull requests are gladly accepted from their original
