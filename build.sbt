@@ -6,7 +6,6 @@ import ReleaseTransformations._
 val validateCommands = List(
   "clean",
   "scalafmtTest",
-  "test:scalafmtTest",
   "compile",
   "test:compile",
   "test"
