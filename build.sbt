@@ -56,7 +56,7 @@ lazy val root = (project in file("."))
         </developer>
       </developers>,
     // License headers
-    headers := createFrom(Apache2_0, "2016", "gutefrage.net GmbH"),
+    headers := createFrom(Apache2_0, "2016-2017", "gutefrage.net GmbH"),
     // Do-it-all build alias for Travis CI
     addCommandAlias("validate", validateCommands.mkString(";", ";", "")),
     // Release settings
@@ -77,9 +77,6 @@ lazy val root = (project in file("."))
       commitNextVersion,
       pushChanges
     ),
-    // Scala versions
-    scalaVersion := "2.12.1",
-    crossScalaVersions := Seq("2.11.8", "2.12.1"),
     // Build settings for the current projects
     inThisBuild(
       List(
