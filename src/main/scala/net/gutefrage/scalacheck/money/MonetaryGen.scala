@@ -29,18 +29,30 @@ import org.scalacheck.{Arbitrary, Gen}
 import scala.collection.JavaConverters._
 
 /**
-  * Provides generators for monetary types.
+  * Provides [[org.scalacheck.Gen]] instances for
+  * [[https://jcp.org/en/jsr/detail?id=354 JSR 354]] monetary types from
+  * `javax.money`.
   */
 object MonetaryGen {
 
   /**
-    * Generate an arbitrary currency.
+    * Generate an arbitrary [[javax.money.CurrencyUnit]].
+    *
+    * This [[org.scalacheck.Gen]] instance will really generate all currencies
+    * supported by the underlying `javax.money` implementation.  This can
+    * include quite obscure currencies which unique properties (e.g. no minor
+    * unit).
     */
   def currency: Gen[CurrencyUnit] =
     Gen.oneOf(Monetary.getCurrencies().asScala.toSeq)
 
   /**
-    * Generate an arbitrary currency for a locale.
+    * Generate an arbitrary [[javax.money.CurrencyUnit]] for a
+    * `java.util.Locale`.
+    *
+    * This [[org.scalacheck.Gen]] instance only generates currencies used in the
+    * given locale.  For instance, `java.util.Locale.US` would typically only
+    * generate a [[javax.money.CurrencyUnit]] for `USD`.
     *
     * @param locale The locale whose currencies to use
     */
@@ -49,15 +61,18 @@ object MonetaryGen {
 
   /**
     * Private helper to guide scala's type inference through the type mess of
-    * Monetary.getDefaultAmountFactory
+    * `Monetary.getDefaultAmountFactory`.
     */
   private def defaultFactory: MonetaryAmountFactory[_ <: MonetaryAmount] =
     Monetary.getDefaultAmountFactory
 
   /**
-    * Generate an arbitrary monetary amount in a currency.
+    * Generate an arbitrary [[javax.money.MonetaryAmount]], using a given
+    * [[org.scalacheck.Gen]] instance for the currency of the amount.
     *
-    * @param currency The currencies for the amount
+    * @param currency A [[org.scalacheck.Gen]] for currency units to use
+    * @see [[net.gutefrage.scalacheck.money.MonetaryGen.currency]]
+    * @see [[net.gutefrage.scalacheck.money.MonetaryGen.currencyInLocale]]
     */
   def monetaryAmount(currency: Gen[CurrencyUnit]): Gen[MonetaryAmount] =
     for {
@@ -66,24 +81,34 @@ object MonetaryGen {
     } yield factory.setNumber(number).create()
 
   /**
-    * Generate an arbitrary amount in a currency with given limits.
+    * Generate an arbitrary [[javax.money.MonetaryAmount]] with given limits,
+    * using a given [[org.scalacheck.Gen]] instance for the currency of the
+    * amount.
     *
     * @param min The minimal value
     * @param max The maximal value
     * @param currency The currency
+    * @see [[net.gutefrage.scalacheck.money.MonetaryGen.currency]]
+    * @see [[net.gutefrage.scalacheck.money.MonetaryGen.currencyInLocale]]
     */
-  def chooseMonetaryAmount(min: Double,
-                           max: Double,
-                           currency: Gen[CurrencyUnit]): Gen[MonetaryAmount] =
+  def chooseMonetaryAmount(
+      min: Double,
+      max: Double,
+      currency: Gen[CurrencyUnit]
+  ): Gen[MonetaryAmount] =
     for {
       factory <- currency.map(defaultFactory.setCurrency)
       number <- Gen.chooseNum(min, max)
     } yield factory.setNumber(number).create(): MonetaryAmount
 
   /**
-    * Generate a positive monetary amount.
+    * Generate an arbitrary '''positive''' [[javax.money.MonetaryAmount]] with
+    * given limits, using a given [[org.scalacheck.Gen]] instance for the
+    * currency of the amount.
     *
     * @param currency The currency
+    * @see [[net.gutefrage.scalacheck.money.MonetaryGen.currency]]
+    * @see [[net.gutefrage.scalacheck.money.MonetaryGen.currencyInLocale]]
     */
   def posMonetaryAmount(currency: Gen[CurrencyUnit]): Gen[MonetaryAmount] =
     Gen.sized(

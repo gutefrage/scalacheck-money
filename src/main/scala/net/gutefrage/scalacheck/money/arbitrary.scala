@@ -21,47 +21,110 @@ import javax.money.{CurrencyUnit, Monetary, MonetaryAmount}
 import org.scalacheck.{Arbitrary, Gen}
 
 /**
-  * Arbitraries for monetary types
+  * [[org.scalacheck.Arbitrary$ Arbitrary]] instances for
+  * [[https://jcp.org/en/jsr/detail?id=354 JSR 354]] monetary types from
+  * `javax.money`.
+  *
+  * Import as wildcard to bring all instances in scope:
+  *
+  * {{{
+  * import net.gutefrage.money.arbitrary._
+  * }}}
+  *
+  * To use arbitrary monetary amounts you also need an instance for a currency
+  * in scope:
+  *
+  * {{{
+  * import javax.money.MonetaryAmount
+  * import net.gutefrage.scalacheck.money.arbitrary._
+  *
+  * property("amounts in any currency") {
+  *   import currency.any
+  *   forAll { amount: MonetaryAmount =>
+  *     …
+  *   }
+  * }
+  *
+  * property("amounts in €") {
+  *   import currency.byCode.EUR
+  *   forAll { amount: MonetaryAmount =>
+  *     …
+  *   }
+  * }
+  *
+  * }}}
   */
 object arbitrary {
 
   /**
-    * Arbitrary instance for monetary amounts.
+    * [[org.scalacheck.Arbitrary$ Arbitrary]] instance for
+    * `javax.money.MonetaryAmount`.
     *
-    * Needs additional arbitraries from the [[currency]] object to select the
-    * currency.
+    * This instance requires an [[org.scalacheck.Arbitrary$ Arbitrary]] instance
+    * for [[javax.money.CurrencyUnit]] in implicit scope.  The package
+    * [[net.gutefrage.scalacheck.money.arbitrary.currency]] provides a couple of
+    * these instances.
     *
-    * @param currency The currency to use.
+    * @param currency An [[org.scalacheck.Arbitrary$ Arbitrary]] instance for
+    *                 the currency to use
     */
   implicit def arbitraryMonetaryAmount(
-      implicit currency: Arbitrary[CurrencyUnit]): Arbitrary[MonetaryAmount] =
+      implicit currency: Arbitrary[CurrencyUnit]
+  ): Arbitrary[MonetaryAmount] =
     Arbitrary(MonetaryGen.monetaryAmount(currency.arbitrary))
 
   /**
-    * Provides arbitrary instances for currencies.
+    * Provides different [[org.scalacheck.Arbitrary$ Arbitrary]] instances for
+    * [[javax.money.CurrencyUnit]].
     *
-    * We recommend to locally import the instance that you need.
+    * It's recommended to import the required instances in local scope!
     */
   object currency {
 
     /**
-      * Generates any currency.
+      * [[org.scalacheck.Arbitrary$ Arbitrary]] instance that generates all
+      * currencies.
+      *
+      * @see [[net.gutefrage.scalacheck.money.MonetaryGen.currency]]
       */
     implicit val any: Arbitrary[CurrencyUnit] = Arbitrary(MonetaryGen.currency)
 
+    /**
+      * [[org.scalacheck.Arbitrary$ Arbitrary]] instances that only generate
+      * currencies with a particular currency code.
+      */
     object byCode {
       private def arbitraryForCode(code: String): Arbitrary[CurrencyUnit] =
         Arbitrary(Gen.const(Monetary.getCurrency(code)))
 
       // Only specific currencies
+      /**
+        * Chinese yuan (CNY).
+        */
       implicit def CNY: Arbitrary[CurrencyUnit] =
         arbitraryForCode("CNY")
+
+      /**
+        * Euro (EUR)
+        */
       implicit def EUR: Arbitrary[CurrencyUnit] =
         arbitraryForCode("EUR")
+
+      /**
+        * British pound (GBP)
+        */
       implicit def GBP: Arbitrary[CurrencyUnit] =
         arbitraryForCode("GBP")
+
+      /**
+        * Japanese yen (JPY)
+        */
       implicit def JPY: Arbitrary[CurrencyUnit] =
         arbitraryForCode("JPY")
+
+      /**
+        * US dollar (USD)
+        */
       implicit def USD: Arbitrary[CurrencyUnit] =
         arbitraryForCode("USD")
     }
