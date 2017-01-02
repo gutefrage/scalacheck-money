@@ -11,7 +11,6 @@ object ScalacheckApiMappingRule extends AutoPlugin {
 
   private def rule: PartialFunction[ModuleID, URL] = {
     case ModuleID("org.scalacheck", _, version, _, _, _, _, _, _, _, _) =>
-      println(s"scalacheck $version")
       url(
         s"http://www.scalacheck.org/files/scalacheck_2.11-$version-api/index.html")
   }
