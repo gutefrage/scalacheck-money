@@ -12,3 +12,16 @@ env:
 script: sbt ++$TRAVIS_SCALA_VERSION validate
 # Publish snapshots to Maven Central after every successful build
 after_success: "./scripts/travis-publish.bash"
+cache:
+  directories:
+  # Cache SBT launcher and SBT dependencies
+  - $HOME/.sbt/0.13/dependency
+  - $HOME/.sbt/boot/scala*
+  - $HOME/.sbt/launchers
+  - $HOME/.ivy2/cache
+before_cache:
+  - du -h -d 1 $HOME/.ivy2/cache
+  - du -h -d 2 $HOME/.sbt/
+  # Delete transient files to avoid needless re-caching
+  - find $HOME/.sbt -name "*.lock" -type f -delete
+  - find $HOME/.ivy2/cache -name "ivydata-*.properties" -type f -delete
