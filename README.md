@@ -7,8 +7,6 @@ scalacheck arbitraries and generators for [JSR 354][] monetary types, e.g.
 
 ## Installation
 
-**Note:** This library is not yet published!
-
 ```scala
 libraryDependencies += "net.gutefrage" %% "scalacheck-money" % "0.1"
 ```
