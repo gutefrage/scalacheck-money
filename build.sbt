@@ -8,7 +8,8 @@ val validateCommands = List(
   "scalafmtTest",
   "compile",
   "test:compile",
-  "test"
+  "test",
+  "doc"
 )
 // Do-it-all build alias for Travis CI
 addCommandAlias("validate", validateCommands.mkString(";", ";", ""))
