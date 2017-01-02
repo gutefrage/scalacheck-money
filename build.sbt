@@ -56,6 +56,13 @@ lazy val root = (project in file("."))
     headers := createFrom(Apache2_0, "2016-2017", "gutefrage.net GmbH"),
     // Release settings: Publish maven style, sign our releases, and define the release steps
     publishMavenStyle := true,
+    publishTo := {
+      val nexus = "https://oss.sonatype.org/"
+      if (isSnapshot.value)
+        Some("snapshots" at nexus + "content/repositories/snapshots")
+      else
+        Some("releases" at nexus + "service/local/staging/deploy/maven2")
+    },
     releasePublishArtifactsAction := PgpKeys.publishSigned.value,
     releaseTagComment := s"scalacheck-money ${(version in ThisBuild).value}",
     releaseCommitMessage := s"Release ${(version in ThisBuild).value}",
