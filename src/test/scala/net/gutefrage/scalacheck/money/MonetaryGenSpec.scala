@@ -30,14 +30,15 @@ class MonetaryGenSpec
     extends PropSpec
     with MustMatchers
     with GeneratorDrivenPropertyChecks {
-  property("currency ∈ Monetary.getCurrencies") {
+  property("∀currency. currency ∈ Monetary.getCurrencies") {
     // Just iterate over all currencies
     forAll(MonetaryGen.currency) { currency =>
       Monetary.getCurrencies() must contain(currency)
     }
   }
 
-  property("currencyInLocale(l) ∈ Monetary.getCurrencies(l)") {
+  property(
+    "∀locale. currencyInLocale(locale) ∈ Monetary.getCurrencies(locale)") {
     val localeAndCurrency = for {
       locale <- Gen.oneOf(Locale.CANADA,
                           Locale.FRANCE,
@@ -50,25 +51,26 @@ class MonetaryGenSpec
       currency <- MonetaryGen.currencyInLocale(locale)
     } yield (locale, currency)
 
-    forAll(localeAndCurrency) { lc =>
-      val (locale, currency) = lc
-      Monetary.getCurrencies(locale).asScala must contain(currency)
+    forAll(localeAndCurrency) {
+      case (locale, currency) =>
+        Monetary.getCurrencies(locale).asScala must contain(currency)
     }
   }
 
-  property("monetaryAmount(c).getCurrency == c") {
+  property("∀currency. monetaryAmount(currency).getCurrency == currency") {
     val currencyAndAmount = for {
       currency <- MonetaryGen.currency
       amount <- MonetaryGen.monetaryAmount(currency)
     } yield (currency, amount)
 
-    forAll(currencyAndAmount) { ca =>
-      val (currency, amount) = ca
-      amount.getCurrency mustBe currency
+    forAll(currencyAndAmount) {
+      case (currency, amount) =>
+        amount.getCurrency mustBe currency
     }
   }
 
-  property("monetaryAmount(min, max, c).getCurrency == c") {
+  property(
+    "∀min, max, currency. monetaryAmount(min, max, currency).getCurrency == currency") {
     val currencyAndAmount = for {
       d1 <- Arbitrary.arbitrary[Double]
       d2 <- Arbitrary.arbitrary[Double]
@@ -77,13 +79,13 @@ class MonetaryGenSpec
         .chooseMonetaryAmount(Math.min(d1, d2), Math.max(d1, d2), currency)
     } yield (currency, amount)
 
-    forAll(currencyAndAmount) { ca =>
-      val (currency, amount) = ca
-      amount.getCurrency mustBe currency
+    forAll(currencyAndAmount) {
+      case (currency, amount) =>
+        amount.getCurrency mustBe currency
     }
   }
 
-  property("min <= monetaryAmount(min, max, c)") {
+  property("∀min, max, currency. min <= monetaryAmount(min, max, currency)") {
     val minAndAmount = for {
       d1 <- Arbitrary.arbitrary[Double]
       d2 <- Arbitrary.arbitrary[Double]
@@ -93,13 +95,13 @@ class MonetaryGenSpec
         .chooseMonetaryAmount(min, Math.max(d1, d2), currency)
     } yield (min, amount)
 
-    forAll(minAndAmount) { ma =>
-      val (min, amount) = ma
-      min must be <= amount.getNumber.doubleValueExact()
+    forAll(minAndAmount) {
+      case (min, amount) =>
+        min must be <= amount.getNumber.doubleValueExact()
     }
   }
 
-  property("monetaryAmount(min, max, c) <= max") {
+  property("∀min, max, currency. monetaryAmount(min, max, currency) <= max") {
     val maxAndAmount = for {
       d1 <- Arbitrary.arbitrary[Double]
       d2 <- Arbitrary.arbitrary[Double]
@@ -109,19 +111,19 @@ class MonetaryGenSpec
         .chooseMonetaryAmount(Math.min(d1, d2), max, currency)
     } yield (max, amount)
 
-    forAll(maxAndAmount) { ma =>
-      val (max, amount) = ma
-      amount.getNumber.doubleValueExact() must be <= max
+    forAll(maxAndAmount) {
+      case (max, amount) =>
+        amount.getNumber.doubleValueExact() must be <= max
     }
   }
 
-  property("posMonetaryAmount(c).value >= 1") {
+  property("∀currency. posMonetaryAmount(currency).value >= 1") {
     forAll(MonetaryGen.posMonetaryAmount(MonetaryGen.currency)) { amount =>
       amount.getNumber.doubleValueExact must be >= 0.0
     }
   }
 
-  property("posMonetaryAmount(c).value <= size") {
+  property("∀currency. posMonetaryAmount(currency).value <= size") {
     val sizeAndAmount = for {
       size <- Gen.posNum[Int]
       amount <- Gen.resize(size,
