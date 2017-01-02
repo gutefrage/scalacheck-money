@@ -83,8 +83,6 @@ lazy val root = (project in file("."))
     ),
     // Build settings for this specific project
     libraryDependencies ++= Seq(
-      // Issues blocking an update to scalacheck 1.13:
-      // https://github.com/scalatest/scalatest/issues/837
       "org.scalacheck" %% "scalacheck" % "1.13.4",
       "javax.money" % "money-api" % "1.0.1",
       "org.scalatest" %% "scalatest" % "3.0.1" % Test,
