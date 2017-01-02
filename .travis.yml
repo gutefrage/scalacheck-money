@@ -4,4 +4,10 @@ jdk:
 scala:
   - 2.11.8
   - 2.12.1
+env:
+  # Sonatype credentials (account holder @lunaryorn)
+  - SONATYPE_USERNAME=lunaryorn-gf
+  - secure: "JwJffb0lO/37qoPS3NxMIs1SVvha8X2A0RQMGMBJAQezmtINkECJ9xsA5Erlr8gfbHNr0/SEsYOk16cwpNF9xNco0eT8aWSjQ8K442IQUR4UpSzejzmeKX01aA6OCsfZ83mTgxFxokLajkB6G3rxsAp1LlzXsjWCykpqH1RnhTu+FSlnZHNHR1cM0FW4DnbORKQiZcn61i2lmavTz2UZePRksE03ZDJheT197y0LrnomVMZRR2WJ9o2LorWBtLaMLYtLsz+S0W3yuo+Il07CaQYIra2FDDfVo8Io3tt8sTHNa5t4p7aQlQu/8P9xPzE02M0P4Rh5V2Yicaec6ZvwGz+GpzXtouUg39xN1pig8tSdP08laNvJrGoKaX82sTTF26rGBJKvlt0z8LUOI0NjzOslJGSiDXHY7cF8psbWT7G7bqwUelFSAlHU8hidI29wEGdB/hXh1FWKqAwHh7zZEoRwxPdLYc3G+mqPUMaigSr3TOhbR0Rzm0CrFWP49p9h2V1pNK6rOxsuPfG7Sx1jbPqdwEjz6q2W3DcwSe4aC4KHMYYXCqELLeb3Qz2RS/RY9IAsMMGpryzhJPu4b0wA44vtwUcvXNNH1SNqziM/Bp0KBC0MQZgDRvr9CzPNk6u/AyLu9i9c4tc1CMU5t0NEQxeXZ2sOA+HeDm7g3pWqjQw="
 script: sbt ++$TRAVIS_SCALA_VERSION validate
+# Publish snapshots to Maven Central after every successful build
+after_success: "./scripts/travis-publish.bash"

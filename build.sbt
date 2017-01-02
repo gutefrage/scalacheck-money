@@ -92,12 +92,24 @@ lazy val root = (project in file("."))
     // Settings for this project and all its subprojects
     inThisBuild(
       List(
+        // General build information
         organization := "net.gutefrage",
         scmInfo := Some(ScmInfo(
           url("https://github.com/gutefrage/scalacheck-money"),
           "scm:git:https://github.com/gutefrage/scalacheck-money.git",
           Some(s"scm:git:git@github.com:gutefrage/scalacheck-money.git")
         )),
+        // Credentials for Travis CI, see
+        // http://www.cakesolutions.net/teamblogs/publishing-artefacts-to-oss-sonatype-nexus-using-sbt-and-travis-ci
+        credentials ++= (for {
+          username <- Option(System.getenv().get("SONATYPE_USERNAME"))
+          password <- Option(System.getenv().get("SONATYPE_PASSWORD"))
+        } yield
+          Credentials("Sonatype Nexus Repository Manager",
+                      "oss.sonatype.org",
+                      username,
+                      password)).toSeq,
+        // Scala versions we publish for
         scalaVersion := "2.12.1",
         crossScalaVersions := Seq("2.12.1", "2.11.8"),
         // Build settings
