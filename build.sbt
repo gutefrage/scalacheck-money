@@ -78,7 +78,8 @@ lazy val root = (project in file("."))
       publishArtifacts,
       setNextVersion,
       commitNextVersion,
-      pushChanges
+      pushChanges,
+      releaseStepCommand("sonatypeRelease")
     ),
     // Build settings for this specific project
     libraryDependencies ++= Seq(
