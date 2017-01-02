@@ -65,7 +65,7 @@ lazy val root = (project in file("."))
     },
     releasePublishArtifactsAction := PgpKeys.publishSigned.value,
     releaseTagComment := s"scalacheck-money ${(version in ThisBuild).value}",
-    releaseCommitMessage := s"Release ${(version in ThisBuild).value}",
+    releaseCommitMessage := s"Bump version to ${(version in ThisBuild).value}",
     releaseCrossBuild := true,
     releaseProcess := Seq[ReleaseStep](
       checkSnapshotDependencies,
