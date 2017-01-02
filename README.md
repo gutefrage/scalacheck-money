@@ -1,5 +1,9 @@
 # scalacheck-money
 
+[![Apache License 2.0](https://img.shields.io/github/license/gutefrage/scalacheck-money.svg)](https://github.com/gutefrage/scalacheck-money/blob/master/LICENSE)
+[![Latest version](https://index.scala-lang.org/gutefrage/scalacheck-money/scalacheck-money/latest.svg)](https://index.scala-lang.org/gutefrage/scalacheck-money/scalacheck-money)
+[![Travis master build status](https://img.shields.io/travis/gutefrage/scalacheck-money/master.svg)](https://travis-ci.org/gutefrage/scalacheck-money)
+
 scalacheck arbitraries and generators for [JSR 354][] monetary types, e.g.
 `javax.money`.
 
