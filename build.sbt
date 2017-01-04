@@ -52,6 +52,8 @@ lazy val root = (project in file("."))
           <url>https://github.com/muuki88/</url>
         </developer>
       </developers>,
+    // Scaladex publishing
+    scaladexKeywords in Scaladex := Seq("scalacheck"),
     // License headers
     headers := createFrom(Apache2_0, "2016-2017", "gutefrage.net GmbH"),
     // Release settings: Publish maven style, sign our releases, and define the release steps
@@ -76,6 +78,7 @@ lazy val root = (project in file("."))
       commitReleaseVersion,
       tagRelease,
       publishArtifacts,
+      releaseStepTask(publish in Scaladex),
       setNextVersion,
       commitNextVersion,
       pushChanges,
