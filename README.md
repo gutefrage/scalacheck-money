@@ -12,7 +12,7 @@ scalacheck arbitraries and generators for [JSR 354][] monetary types, e.g.
 ## Installation
 
 ```scala
-libraryDependencies += "net.gutefrage" %% "scalacheck-money" % "0.1"
+libraryDependencies += "net.gutefrage" %% "scalacheck-money" % "0.2"
 ```
 
 Until [JSR 354][] is included in Java you will also need an implementation, e.g.
