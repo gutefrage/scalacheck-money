@@ -91,7 +91,10 @@ lazy val root = (project in file("."))
       "org.scalatest" %% "scalatest" % "3.0.1" % Test,
       "org.javamoney" % "moneta" % "1.1" % Test
     ),
-    // Settings for this project and all its subprojects
+    // Settings for this project and all its subprojects.
+    //
+    // Note: We specify Scala versions in .travis.yml and let the sbt-travisci plugin handle the rest, so you'll not
+    // find crossScalaVersions here.
     inThisBuild(
       List(
         // General build information
@@ -111,9 +114,6 @@ lazy val root = (project in file("."))
                       "oss.sonatype.org",
                       username,
                       password)).toSeq,
-        // Scala versions we publish for
-        scalaVersion := "2.12.1",
-        crossScalaVersions := Seq("2.12.1", "2.11.8"),
         // Build settings
         scalacOptions ++= Seq(
           // Code encoding
