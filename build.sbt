@@ -5,9 +5,10 @@ import ReleaseTransformations._
 // Commands to run on Travis CI
 val validateCommands = List(
   "clean",
-  "scalafmtTest",
+  "checkHeaders",
   "compile",
   "test:compile",
+  "scalafmtTest",
   "test",
   "doc"
 )
